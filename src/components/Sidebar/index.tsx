@@ -14,7 +14,7 @@ const Sidebar = ({ sidebarOpen, toggleSidebar }: SidebarProps) => {
   const SidebarMenu = [
     {
       name: 'Dashboard',
-      path: '/buttonDashboard',
+      path: '/',
       icon: <FaHome />,
       subNav: [
         {

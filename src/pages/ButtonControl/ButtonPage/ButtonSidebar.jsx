@@ -9,7 +9,7 @@ const ButtonSidebar = ({ toggleButtonSidebar, showButtonSidebar }) => {
     const Links = [
         {
             name: 'Dashboard',
-            path: '/buttonArea',
+            path: '/',
         },
         {
             name: 'Settings',

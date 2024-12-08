@@ -25,17 +25,16 @@ const MeasurementForm = ({ selectedButton, onClose, updateButton, setSelectedBut
                     </h2>
                     <form onSubmit={handleSubmit} className="text-right text-black space-y-4">
                         <div>
-                            <label>
+                            <label className="block text-gray-700 dark:text-gray-200 mb-1">
                                 Number of Columns (1-12):
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="12"
-                                    value={columns}
-                                    onChange={(e) => setColumns(Math.min(Math.max(Number(e.target.value), 1), 12))}
-                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                />
                             </label>
+                            <input
+                                type="number"
+                                max="12"
+                                value={columns || ''}
+                                onChange={(e) => setColumns(e.target.value ? Math.min(Math.max(Number(e.target.value), 1), 12) : '')}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            />
                         </div>
                         <div>
                             <label className="block text-gray-700 dark:text-gray-200 mb-1">
