@@ -102,7 +102,7 @@ export default function Layout() {
     };
 
 
-
+    console.log('buttonsbuttons', buttons);
 
 
     return (
@@ -120,6 +120,7 @@ export default function Layout() {
                     handleRenameClick={handleRenameClick}
                     deleteButton={handleDeleteButton}
                     handleMovementButton={handleMovementButton}
+                    selectedButton={selectedButton}
                 />
                 <div className="flex p-6">
                     <ButtonArea

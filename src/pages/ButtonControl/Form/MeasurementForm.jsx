@@ -12,10 +12,6 @@ const MeasurementForm = ({ selectedButton, onClose, updateButton, setSelectedBut
 
     };
 
-
-
-
-
     return (
         <div className="absolute z-50 top-0 left-0 w-full h-full bg-black bg-opacity-90">
             <div className="fixed inset-0 flex justify-center items-center">
@@ -34,6 +30,8 @@ const MeasurementForm = ({ selectedButton, onClose, updateButton, setSelectedBut
                                 value={columns || ''}
                                 onChange={(e) => setColumns(e.target.value ? Math.min(Math.max(Number(e.target.value), 1), 12) : '')}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                required
+                                min="1"
                             />
                         </div>
                         <div>
@@ -42,11 +40,11 @@ const MeasurementForm = ({ selectedButton, onClose, updateButton, setSelectedBut
                             </label>
                             <input
                                 type="number"
-                                value={height}
-                                onChange={(e) => setHeight(Number(e.target.value))}
+                                value={height || ''}
+                                onChange={(e) => setHeight(e.target.value ? Math.max(Number(e.target.value), 1) : '')}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
-                                min="1"
+                                min="20"
                             />
                         </div>
                         <div className="flex justify-end space-x-2">

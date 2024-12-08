@@ -13,6 +13,8 @@ const ButtonNavbar = ({
     handleRenameClick,
     deleteButton,
     handleMovementButton,
+    selectedButton
+
 }) => {
     const [showMenu, setShowMenu] = useState(false);
     const dropdownRef = useRef(null); // Reference to the dropdown
@@ -34,6 +36,8 @@ const ButtonNavbar = ({
         };
     }, []);
 
+
+
     const buttons = [
         {
             id: 1,
@@ -43,7 +47,7 @@ const ButtonNavbar = ({
         },
         {
             id: 2,
-            name: "تحريك وتثبيت",
+            name: selectedButton?.isFixed ? " تحريك" : "تثبيت",
             icon: <GiMove />,
             action: handleMovementButton,
         },
