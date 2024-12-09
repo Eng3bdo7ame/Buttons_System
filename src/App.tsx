@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
-import PageTitle from './components/PageTitle';
 import ButtonDashboard from './pages/ButtonControl/ButtonDashboard';
 import ButtonArea from './pages/ButtonControl/ButtonPage/ButtonArea';
 
@@ -30,7 +29,6 @@ function App() {
             index
             element={
               <>
-                <PageTitle title="AddingButton | TailAdmin - Tailwind CSS Admin Dashboard Template" />
                 <ButtonArea />
               </>
             }
