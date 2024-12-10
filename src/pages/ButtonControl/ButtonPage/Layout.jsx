@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ButtonSidebar from "./ButtonSidebar";
 import ButtonNavbar from "./ButtonNavbar";
+import ButtonFooter from "./ButtonFooter";
 import ButtonArea from "./ButtonArea";
 import MeasurementForm from "../Form/MeasurementForm";
 import Rename from "../Form/Rename";
@@ -69,9 +70,6 @@ export default function Layout() {
         }
     };
 
-
-
-
     const updateButton = (id, updatedValues) => {
         const updatedButtons = buttons.map((button) =>
             button.id === id ? { ...button, ...updatedValues } : button
@@ -80,8 +78,6 @@ export default function Layout() {
         localStorage.setItem("buttons", JSON.stringify(updatedButtons));
         setSelectedButton({ ...selectedButton, ...updatedValues });
     };
-
-
 
     const AddNewButton = () => {
         let newId = buttons.length + 1;
@@ -102,16 +98,10 @@ export default function Layout() {
     };
 
 
-    console.log('buttonsbuttons', buttons);
 
 
     return (
-        <div className="flex h-screen overflow-hidden bg-white dark:bg-gray-900">
-            <ButtonSidebar
-                toggleButtonSidebar={toggleButtonSidebar}
-                showButtonSidebar={showButtonSidebar}
-                setShowButtonSidebar={setShowButtonSidebar}
-            />
+        <div className="flex gap-3 h-screen overflow-hidden bg-white dark:bg-gray-900">
             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                 <ButtonNavbar
                     toggleButtonSidebar={toggleButtonSidebar}
@@ -122,7 +112,7 @@ export default function Layout() {
                     handleMovementButton={handleMovementButton}
                     selectedButton={selectedButton}
                 />
-                <div className="flex p-6">
+                <div className="flex py-3">
                     <ButtonArea
                         setButtons={setButtons}
                         selectedButton={selectedButton}
@@ -132,7 +122,20 @@ export default function Layout() {
                         AddNewButton={AddNewButton} // تمرير دالة الإضافة
                     />
                 </div>
+
+                <ButtonFooter />
+
+
+
             </div>
+
+            <ButtonSidebar
+                toggleButtonSidebar={toggleButtonSidebar}
+                showButtonSidebar={showButtonSidebar}
+                setShowButtonSidebar={setShowButtonSidebar}
+            />
+
+
 
             {showMeasurementForm && (
                 <MeasurementForm
@@ -152,6 +155,8 @@ export default function Layout() {
                     buttons={buttons}
                 />
             )}
+
+
         </div>
     );
 }

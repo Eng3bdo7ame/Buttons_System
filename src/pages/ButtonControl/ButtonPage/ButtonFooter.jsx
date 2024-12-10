@@ -91,13 +91,7 @@ const ButtonFooter = ({
 
                 </div>
 
-                <div className="">
-                    {!showButtonSidebar && (
-                        <button onClick={toggleButtonSidebar} className="text-gray-900 dark:text-white ml-15">
-                            <AiOutlineMenu size={25} />
-                        </button>
-                    )}
-                </div>
+
 
                 <div className="relative" ref={dropdownRef}>
                     <div className="xl:hidden lg:flex items-center justify-end">

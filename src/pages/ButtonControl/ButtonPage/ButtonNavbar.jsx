@@ -73,13 +73,7 @@ const ButtonNavbar = ({
     return (
         <>
             <nav className="bg-white dark:bg-gray-800 text-white p-4 flex justify-between w-full items-center shadow-lg shadow-gray-500/50 dark:shadow-none">
-                <div className="">
-                    {!showButtonSidebar && (
-                        <button onClick={toggleButtonSidebar} className="text-gray-900 dark:text-white">
-                            <AiOutlineMenu size={25} />
-                        </button>
-                    )}
-                </div>
+
 
                 <div className="container mx-auto xl:flex items-center justify-end gap-8 2xsm:hidden ">
                     <ul className="flex gap-4">
@@ -95,7 +89,14 @@ const ButtonNavbar = ({
                         ))}
                     </ul>
 
-                    <h1 className="text-gray-900 dark:text-white text-xl font-bold">الرئيسيه للتحكم</h1>
+                    <div className="">
+                        {!showButtonSidebar && (
+                            <button onClick={toggleButtonSidebar} className="text-gray-900 dark:text-white">
+                                <AiOutlineMenu size={25} />
+                            </button>
+                        )}
+                    </div>
+
                 </div>
 
                 <div className="relative" ref={dropdownRef}>

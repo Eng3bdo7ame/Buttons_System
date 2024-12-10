@@ -1,25 +1,12 @@
 import { useState } from 'react';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const ButtonSidebar = ({ toggleButtonSidebar, showButtonSidebar }) => {
     const location = useLocation();
 
 
-    const Links = [
-        {
-            name: 'Dashboard',
-            path: '/',
-        },
-        {
-            name: 'Settings',
-            path: '/settings',
-        },
-        {
-            name: 'Profile',
-            path: '/profile',
-        },
-    ];
+
 
     console.log('showButtonSidebar', showButtonSidebar);
 
@@ -31,7 +18,7 @@ const ButtonSidebar = ({ toggleButtonSidebar, showButtonSidebar }) => {
             >
 
                 <div className='flex justify-between p-4 border-1'>
-                    <h1>AddButton</h1>
+                    <h1>اضافه صفحه جديده</h1>
                     <button onClick={toggleButtonSidebar} className="">
                         <FaArrowLeft />
                     </button>
@@ -39,6 +26,7 @@ const ButtonSidebar = ({ toggleButtonSidebar, showButtonSidebar }) => {
 
 
                 <nav className="mt-4">
+                    {/*
                     <ul className="mb-6 flex flex-col gap-3">
                         {Links.map((item, index) => (
                             <li
@@ -56,6 +44,15 @@ const ButtonSidebar = ({ toggleButtonSidebar, showButtonSidebar }) => {
                             </li>
                         ))}
                     </ul>
+                */}
+
+                    <button
+                        // onClick={AddNewButton}
+                        className="w-full flex justify-center items-center gap-2 mt-5 bg-primary text-white text-lg py-3 px-3 rounded-md"
+                    >
+                        <FaPlus />
+                        اضافه صفحه جديده
+                    </button>
 
                 </nav>
 
