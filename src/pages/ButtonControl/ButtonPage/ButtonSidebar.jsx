@@ -1,64 +1,56 @@
 import { useState } from 'react';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
-import { Link, Outlet, useLocation } from 'react-router-dom';
 
-const ButtonSidebar = ({ toggleButtonSidebar, showButtonSidebar }) => {
-    const location = useLocation();
+const ButtonSidebar = ({
+  toggleButtonSidebar,
+  showButtonSidebar,
+  pages, // تمرير قائمة الصفحات
+  AddNewPage, // تمرير دالة إضافة صفحة جديدة
+}) => {
+//   console.log('showButtonSidebar', showButtonSidebar);
 
-
-
-
-    console.log('showButtonSidebar', showButtonSidebar);
-
-    return (
-        <div className='relative'>
-            <aside
-                className={`${showButtonSidebar ? 'block' : 'hidden'
-                    } xl:relative absolute left-0 top-0 z-50 w-55 shadow-lg shadow-gray-500/50 dark:shadow-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white h-screen duration-300 ease-linear transition-width`}
-            >
-
-                <div className='flex justify-between p-4 border-1'>
-                    <h1>اضافه صفحه جديده</h1>
-                    <button onClick={toggleButtonSidebar} className="">
-                        <FaArrowLeft />
-                    </button>
-                </div>
-
-
-                <nav className="mt-4">
-                    {/*
-                    <ul className="mb-6 flex flex-col gap-3">
-                        {Links.map((item, index) => (
-                            <li
-                                key={index}
-                                className="border-b border-stroke dark:border-strokedark"
-                            >
-                                <Link
-                                    to={item.path}
-                                    className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-gray-900 dark:text-bodydark1 duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-meta-4 ${item.path === location.pathname ? 'bg-gray-100 dark:bg-meta-4' : ''
-                                        }`}
-                                >
-                                    {item.icon}
-                                    <span className="whitespace-nowrap">{item.name}</span>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                */}
-
-                    <button
-                        // onClick={AddNewButton}
-                        className="w-full flex justify-center items-center gap-2 mt-5 bg-primary text-white text-lg py-3 px-3 rounded-md"
-                    >
-                        <FaPlus />
-                        اضافه صفحه جديده
-                    </button>
-
-                </nav>
-
-            </aside>
+  return (
+    <div className="relative">
+      <aside
+        className={`${
+          showButtonSidebar ? 'block' : 'hidden'
+        } xl:relative absolute left-0 top-0 z-50 w-55 shadow-lg shadow-gray-500/50 dark:shadow-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white h-screen duration-300 ease-linear transition-width`}
+      >
+        <div className="flex justify-between p-4 border-b border-gray-300">
+          <h1 className="text-lg font-bold">إضافة صفحة جديدة</h1>
+          <button
+            onClick={toggleButtonSidebar}
+            className="text-gray-500 hover:text-gray-800"
+          >
+            <FaArrowLeft />
+          </button>
         </div>
-    );
+
+        {/* زر إضافة صفحة */}
+        <button
+          onClick={AddNewPage}
+          className="w-full flex justify-center items-center gap-2 mt-5 bg-blue-500 text-white text-lg py-3 px-3 rounded-md hover:bg-blue-600"
+        >
+          <FaPlus />
+          إضافة صفحة جديدة
+        </button>
+
+        {/* قائمة الصفحات */}
+        <nav className="mt-4">
+          <ul className="space-y-2">
+            {pages.map((page) => (
+              <li
+                key={page.id}
+                className="p-2 bg-gray-100 rounded hover:bg-gray-200"
+              >
+                <span>{page.name}</span>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  );
 };
 
 export default ButtonSidebar;
