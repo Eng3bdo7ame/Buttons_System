@@ -10,11 +10,14 @@ const ButtonFooter = ({
     handleRenameClick,
     selectedButton,
     updateButton,
+    setSelectedButton,
     pages,
     setShowPagePopup,
-    handleFooterAction
+    handleFooterAction,
 }) => {
     const [showMenu, setShowMenu] = useState(false);
+    const [showColorPicker, setShowColorPicker] = useState(false); // لحالة عرض فورم اللون
+    const [color, setColor] = useState('#2563eb'); // القيمة الافتراضية للون
     const dropdownRef = useRef(null); // Reference to the dropdown
 
     const toggleShowMenu = () => {
@@ -34,9 +37,6 @@ const ButtonFooter = ({
         };
     }, []);
 
-
-
-
     const exportToExcel = () => {
         if (!selectedButton) {
             alert('من فضلك اختر زرًا!');
@@ -44,14 +44,15 @@ const ButtonFooter = ({
         }
         const data = [
             { اسم: selectedButton.name, ارتفاع: selectedButton.height, أعمدة: selectedButton.columns },
-        ]; // البيانات المراد تصديرها
+        ];
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Buttons');
         XLSX.writeFile(workbook, 'buttons_data.xlsx');
+
+        alert('تم التصدير بنجاح');
+        setSelectedButton(null);
     };
-
-
 
     const addMedia = () => {
         if (!selectedButton) {
@@ -64,26 +65,29 @@ const ButtonFooter = ({
         fileInput.onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
-                updateButton(selectedButton.id, { media: file.name }); // إضافة اسم الملف للزر
+                updateButton(selectedButton.id, { media: file.name });
                 alert(`تم إضافة ${file.name}`);
             }
         };
         fileInput.click();
-    };
 
+        setSelectedButton(null);
+    };
 
     const changeColor = () => {
         if (!selectedButton) {
             alert('من فضلك اختر زرًا!');
             return;
         }
-        const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00'];
-        const selectedColor = prompt(`اختر لونًا: ${colors.join(', ')}`);
-        if (colors.includes(selectedColor)) {
-            updateButton(selectedButton.id, { color: selectedColor });
-        } else {
-            alert('اللون غير صحيح!');
-        }
+        setShowColorPicker(true); // عرض فورم اختيار اللون
+    };
+
+    const confirmColorChange = () => {
+        updateButton(selectedButton.id, { color });
+        alert(`تم تغيير لون الزر إلى ${color}`);
+        setShowColorPicker(false); // إخفاء الفورم
+        setSelectedButton(null); // إلغاء تحديد الزر
+
     };
 
     const changeShape = () => {
@@ -95,6 +99,8 @@ const ButtonFooter = ({
         if (newShape) {
             updateButton(selectedButton.id, { shape: newShape });
         }
+
+        setSelectedButton(null);
     };
 
     const switchToPage = () => {
@@ -104,9 +110,6 @@ const ButtonFooter = ({
         }
         setShowPagePopup(true);
     };
-
-
-
 
     const buttons = [
         {
@@ -138,13 +141,8 @@ const ButtonFooter = ({
             name: 'تحويل صفحه جديده',
             icon: <AiOutlineFullscreen />,
             action: () => handleFooterAction(switchToPage),
-        }
-
+        },
     ];
-
-
-
-    console.log(selectedButton);
 
     return (
         <>
@@ -167,39 +165,54 @@ const ButtonFooter = ({
                         ))}
                     </ul>
                 </div>
-
-                <div className="relative" ref={dropdownRef}>
-                    <div className="xl:hidden lg:flex items-center justify-end">
-                        <button
-                            onClick={toggleShowMenu}
-                            className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                        >
-                            Dropdown
-                        </button>
-                    </div>
-
-                    {showMenu && (
-                        <div className="xl:hidden lg:flex z-10 absolute left-0 mt-8 bg-white divide-y divide-gray-100 rounded-lg shadow w-64">
-                            <ul className="py-2 text-sm text-gray-700">
-                                {buttons.map((button, index) => (
-                                    <li className="p-2" key={index}>
-                                        <button
-                                            onClick={button.action}
-                                            disabled={!selectedButton?.isActive} // تعطيل الزر إذا كان غير مفعّل
-                                            className={`flex items-center gap-2 px-4 py-2 rounded ${selectedButton?.isActive
-                                                ? 'bg-gray-100 hover:bg-gray-200'
-                                                : 'bg-gray-300 cursor-not-allowed'
-                                                }`}
-                                        >
-                                            {button.icon} {button.name}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
             </nav>
+
+            {/* فورم اختيار اللون */}
+            {showColorPicker && (
+                <div className="w-full absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white dark:bg-gray-800 p-5 rounded shadow-lg w-[30%]">
+                        <h2 className="text-lg font-bold mb-4">اختر اللون</h2>
+                        <label
+                            htmlFor="hs-color-input"
+                            className="block text-sm font-medium mb-2 dark:text-white"
+                        >
+                            Color picker
+                        </label>
+                        <div className="mt-5 flex items-center gap-3">
+                            <input
+                                className="text-right text-black dark:text-white dark:bg-gray-800 font-semibold w-full p-1 border rounded"
+                                type="text" id="hs-color-input" value={color} onChange={(e) => setColor(e.target.value)} />
+                            <input
+                                type="color"
+                                className="p-1 h-10 w-full block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
+                                id="hs-color-input"
+                                value={color}
+                                onChange={(e) => setColor(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="flex justify-between">
+
+                            <button
+                                onClick={() => setShowColorPicker(false)}
+                                className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                                الغاء
+                            </button>
+
+                            <button
+                                onClick={confirmColorChange}
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                تأكيد
+                            </button>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

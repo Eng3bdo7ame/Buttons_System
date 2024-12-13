@@ -223,7 +223,6 @@ export default function Layout() {
           onMeasurementClick={handleMeasurementClick}
           handleRenameClick={handleRenameClick}
           setSelectedButton={setSelectedButton}
-
           deleteButton={handleDeleteButton}
           handleMovementButton={handleMovementButton}
           selectedButton={selectedButton}
