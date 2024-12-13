@@ -35,6 +35,8 @@ const ButtonNavbar = ({
     };
   }, []);
 
+  console.log('selectedButton', selectedButton);
+
   const buttons = [
     {
       id: 1,

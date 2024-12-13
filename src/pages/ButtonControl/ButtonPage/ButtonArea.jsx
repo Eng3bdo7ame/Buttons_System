@@ -16,6 +16,7 @@ export default function ButtonArea({
   setButtons,
   selectedButton,
   setSelectedButton,
+  pages,
   AddNewButton,
 }) {
   const [draggingButtonId, setDraggingButtonId] = useState(null);
@@ -80,25 +81,40 @@ export default function ButtonArea({
     setDraggingButtonId(event.active.id);
   };
 
-//   console.log(
-//     'columns',
-//     buttons.map((button) => button.columns),
-//   );
+  //   console.log(
+  //     'columns',
+  //     buttons.map((button) => button.columns),
+  //   );
 
-  const handleButtonClick = (button, event) => {
-    const rect = event.target.getBoundingClientRect();
-    setSelectedButton(selectedButton?.id === button.id ? null : button);
+  //   const handleButtonClick = (button, event) => {
+  //     const rect = event.target.getBoundingClientRect();
+  //     setSelectedButton(selectedButton?.id === button.id ? null : button);
 
-    if (selectedButton?.id === button.id) {
-      setPopupVisible(false);
-    } else {
-      setPopupPosition({
-        top: rect.top - 70,
-        left: rect.left + rect.width / 2,
-      });
-      setPopupVisible(true);
+  //     if (selectedButton?.id === button.id) {
+  //       setPopupVisible(false);
+  //     } else {
+  //       setPopupPosition({
+  //         top: rect.top - 70,
+  //         left: rect.left + rect.width / 2,
+  //       });
+  //       setPopupVisible(true);
+  //     }
+  //  };
+
+  const handleButtonClick = (button) => {
+    setSelectedButton(button); // تحديد الزر
+    if (button.action) {
+      button.action(); // تنفيذ الوظيفة المحفوظة
     }
   };
+
+
+
+  const CurrentPage = pages.find((page) => page.id === selectedButton?.targetPage);
+
+
+  console.log('pages', pages);
+  console.log('CurrentPage', CurrentPage);
 
   return (
     <main className="relative flex-1 p-6 bg-gray-200 dark:bg-gray-600">
@@ -126,60 +142,25 @@ export default function ButtonArea({
                 return (
                   <div
                     key={button.id}
-                    className={`relative col-span-${button.columns || 3} ${
-                      isDragging ? 'shadow-lg' : ''
-                    }`}
                     style={{
-                      gridColumn: `span ${button.columns || 3} / span ${
-                        button.columns || 3
-                      }`,
+                      gridColumn: `span ${button.columns || 3} / span ${button.columns || 3
+                        }`,
                     }}
                   >
-                    {/* عنصر الزر */}
+
+
                     <SortableItem
                       id={button.id}
                       button={button}
-                      onClick={(e) => (
-                        setSelectedButton(isSelected ? null : button),
-                        handleButtonClick(button, e)
-                      )}
+                      onClick={() => handleButtonClick(button)}
                       selectedButton={selectedButton}
                     />
 
 
-                    {/* المربع يظهر فقط للزر المحدد */}
-                    {isSelected && popupPosition && (
-                      <div className="absolute -top-[300%] left-0 bg-white shadow-lg rounded p-4 z-50 border border-gray-300">
-                        <div
-                          className="absolute w-4 h-4 bg-white border-l border-t border-gray-300"
-                          style={{
-                            bottom: '-8px',
-                            left: '50%',
-                            transform: 'translateX(-50%) rotate(45deg)',
-                            zIndex: -1,
-                          }}
-                        ></div>
 
-                        <h3 className="text-lg font-bold mb-2 text-center">
-                          {selectedButton.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4 text-center">
-                          ينقل إلى: {selectedButton.targetPage || 'غير محدد'}
-                        </p>
-                        <ul className="space-y-2">
-                          <li>
-                            <button
-                              onClick={() =>
-                                handleDeleteButton(selectedButton.id)
-                              }
-                              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 w-full"
-                            >
-                              حذف الزر
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
+
+
+
                   </div>
                 );
               })}

@@ -11,18 +11,21 @@ export default function Layout() {
   const [showMeasurementForm, setMeasurementForm] = useState(false);
   const [showRenameForm, setShowRenameForm] = useState(false);
   const [selectedButton, setSelectedButton] = useState(null);
-  const [buttons, setButtons] = useState(
-    JSON.parse(localStorage.getItem('buttons')) || [],
-  );
 
   const [pages, setPages] = useState(
-    JSON.parse(localStorage.getItem('pages')) || [],
+    JSON.parse(localStorage.getItem('pages')) || [
+      { id: 1, name: 'الصفحة الرئيسية', buttons: [] },
+    ],
   ); // الصفحات المخزنة
+
+  const [currentPageId, setCurrentPageId] = useState(pages[0]?.id || null); // الصفحة النشطة
   const [showPagePopup, setShowPagePopup] = useState(false); // حالة عرض الـ popup لاختيار الصفحة
 
   const toggleButtonSidebar = () => {
     setShowButtonSidebar(!showButtonSidebar);
   };
+
+  console.log('showPagePopup', showPagePopup);
 
   const handleMeasurementClick = () => {
     if (selectedButton) {
@@ -33,36 +36,70 @@ export default function Layout() {
   };
 
   const AddNewButton = () => {
-    let newId = buttons.length + 1;
-    while (buttons.some((button) => button.id === newId)) {
-      newId++;
-    }
-  
+    const currentPage = pages.find((page) => page.id === currentPageId);
+    if (!currentPage) return;
+
+    const newId = Date.now();
     const newButton = {
       id: newId,
-      name: `Button ${newId}`,
+      name: `Button ${currentPage.buttons.length + 1}`,
       height: 50,
       columns: 3,
       isFixed: false,
       isActive: true, // خاصية تفعيل الزر
       targetPage: 'الصفحة الرئيسية', // الصفحة الافتراضية
     };
-  
-    const updatedButtons = [...buttons, newButton];
-    setButtons(updatedButtons);
-    localStorage.setItem('buttons', JSON.stringify(updatedButtons));
+
+    const updatedPages = pages.map((page) =>
+      page.id === currentPageId
+        ? { ...page, buttons: [...page.buttons, newButton] }
+        : page,
+    );
+
+    setPages(updatedPages);
+    localStorage.setItem('pages', JSON.stringify(updatedPages));
   };
-  
+
+  const AddNewPage = () => {
+    const pageName = prompt('أدخل اسم الصفحة الجديدة:'); // طلب اسم الصفحة
+    if (!pageName) return; // إذا لم يتم إدخال اسم، لا تُضيف الصفحة
+
+    const newPage = {
+      id: Date.now(),
+      name: pageName, // تخزين الاسم المدخل
+      buttons: [],
+    };
+
+    const updatedPages = [...pages, newPage];
+    setPages(updatedPages);
+    localStorage.setItem('pages', JSON.stringify(updatedPages));
+    setCurrentPageId(newPage.id); // الانتقال للصفحة الجديدة
+  };
+
+  const handleSwitchPage = (pageId) => {
+    setCurrentPageId(pageId);
+    setShowPagePopup(false);
+    setSelectedButton(null);
+  };
+
+
 
   const handleMovementButton = () => {
     if (selectedButton) {
-      const updatedButtons = buttons.map((button) =>
-        button.id === selectedButton.id
-          ? { ...button, isFixed: !button.isFixed }
-          : button,
+      const updatedPages = pages.map((page) =>
+        page.id === currentPageId
+          ? {
+            ...page,
+            buttons: page.buttons.map((button) =>
+              button.id === selectedButton.id
+                ? { ...button, isFixed: !button.isFixed }
+                : button,
+            ),
+          }
+          : page,
       );
-      setButtons(updatedButtons);
-      localStorage.setItem('buttons', JSON.stringify(updatedButtons));
+      setPages(updatedPages);
+      localStorage.setItem('pages', JSON.stringify(updatedPages));
       setSelectedButton(null);
     } else {
       alert('من فضلك اختر زرًا لتثبيته أو إلغاء تثبيته!');
@@ -78,9 +115,14 @@ export default function Layout() {
   };
 
   const deleteButton = (id) => {
-    const updatedButtons = buttons.filter((button) => button.id !== id);
-    setButtons(updatedButtons);
-    localStorage.setItem('buttons', JSON.stringify(updatedButtons));
+    const updatedPages = pages.map((page) =>
+      page.id === currentPageId
+        ? { ...page, buttons: page.buttons.filter((button) => button.id !== id) }
+        : page,
+    );
+
+    setPages(updatedPages);
+    localStorage.setItem('pages', JSON.stringify(updatedPages));
 
     if (selectedButton?.id === id) {
       setSelectedButton(null);
@@ -101,50 +143,45 @@ export default function Layout() {
   };
 
   const updateButton = (id, updatedValues) => {
-    const updatedButtons = buttons.map((button) =>
-      button.id === id ? { ...button, ...updatedValues } : button,
+    const updatedPages = pages.map((page) =>
+      page.id === currentPageId
+        ? {
+          ...page,
+          buttons: page.buttons.map((button) =>
+            button.id === id ? { ...button, ...updatedValues } : button,
+          ),
+        }
+        : page,
     );
-    setButtons(updatedButtons);
-    localStorage.setItem('buttons', JSON.stringify(updatedButtons));
+
+    setPages(updatedPages);
+    localStorage.setItem('pages', JSON.stringify(updatedPages));
     setSelectedButton({ ...selectedButton, ...updatedValues });
   };
 
-  const AddNewPage = () => {
-    const pageName = prompt('أدخل اسم الصفحة الجديدة:'); // طلب اسم الصفحة
-    if (!pageName) return; // إذا لم يتم إدخال اسم، لا تُضيف الصفحة
+  const currentPage = pages.find((page) => page.id === currentPageId);
 
-    const newPage = {
-      id: pages.length + 1,
-      name: pageName, // تخزين الاسم المدخل
-    };
 
-    const updatedPages = [...pages, newPage];
-    setPages(updatedPages);
-    localStorage.setItem('pages', JSON.stringify(updatedPages));
-  };
 
-  const handleSwitchPage = (pageId) => {
+  const handleFooterAction = (footerAction) => {
     if (selectedButton) {
-      const updatedButtons = buttons.map((button) =>
-        button.id === selectedButton.id
-          ? {
-              ...button,
-              targetPage: pages.find((page) => page.id === pageId)?.name,
-            }
-          : button,
-      );
-      setButtons(updatedButtons);
-      localStorage.setItem('buttons', JSON.stringify(updatedButtons));
-      setSelectedButton({
-        ...selectedButton,
-        targetPage: pages.find((page) => page.id === pageId)?.name,
-      });
+      updateButton(selectedButton.id, { action: footerAction }); // تحديث الوظيفة
+      alert(`تم تعيين الوظيفة للزر "${selectedButton.name}"`);
+      setSelectedButton(null); // إلغاء تحديد الزر
+
+    } else {
+      alert('من فضلك اختر زرًا أولاً!');
     }
-    setShowPagePopup(false); // إغلاق النافذة المنبثقة
   };
+
+
+
+
 
   return (
     <div className="flex gap-3 h-screen overflow-hidden bg-white dark:bg-gray-900">
+
+
       <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <ButtonNavbar
           toggleButtonSidebar={toggleButtonSidebar}
@@ -155,25 +192,53 @@ export default function Layout() {
           handleMovementButton={handleMovementButton}
           selectedButton={selectedButton}
         />
+
         <div className="flex py-3">
-          <ButtonArea
-            setButtons={setButtons}
-            selectedButton={selectedButton}
-            setSelectedButton={setSelectedButton}
-            updateButton={updateButton}
-            buttons={buttons}
-            AddNewButton={AddNewButton}
-          />
+          {currentPage && currentPage.buttons ? (
+            <ButtonArea
+              buttons={currentPage.buttons}
+              setButtons={(newButtons) => {
+                const updatedPages = pages.map((page) =>
+                  page.id === currentPageId
+                    ? { ...page, buttons: newButtons }
+                    : page,
+                );
+                setPages(updatedPages);
+                localStorage.setItem('pages', JSON.stringify(updatedPages));
+              }}
+              selectedButton={selectedButton}
+              setSelectedButton={setSelectedButton}
+              AddNewButton={AddNewButton}
+              pages={pages}
+
+            />
+          ) : (
+            <p className="text-center text-gray-500">لا توجد بيانات لعرضها!</p>
+          )}
         </div>
+
         <ButtonFooter
-          onAddPage={AddNewPage}
+          toggleButtonSidebar={toggleButtonSidebar}
+          showButtonSidebar={showButtonSidebar}
+          onMeasurementClick={handleMeasurementClick}
+          handleRenameClick={handleRenameClick}
+          setSelectedButton={setSelectedButton}
+
+          deleteButton={handleDeleteButton}
+          handleMovementButton={handleMovementButton}
           selectedButton={selectedButton}
+          handleSwitchPage={handleSwitchPage}
+          updateButton={updateButton}
+          pages={pages}
+          setShowPagePopup={setShowPagePopup}
+          handleFooterAction={handleFooterAction}
           onSwitchPage={() => {
             if (selectedButton) {
               setShowPagePopup(true);
             } else {
               alert('من فضلك اختر زرًا لتحديد الصفحة!');
             }
+
           }}
         />
       </div>
@@ -181,9 +246,9 @@ export default function Layout() {
       <ButtonSidebar
         toggleButtonSidebar={toggleButtonSidebar}
         showButtonSidebar={showButtonSidebar}
-        setShowButtonSidebar={setShowButtonSidebar}
-        pages={pages} // تمرير الصفحات
-        AddNewPage={AddNewPage} // تمرير دالة إضافة صفحة جديدة
+        pages={pages}
+        AddNewPage={AddNewPage}
+        setCurrentPageId={handleSwitchPage}
       />
 
       {showMeasurementForm && (
@@ -201,7 +266,7 @@ export default function Layout() {
           setSelectedButton={setSelectedButton}
           onClose={() => setShowRenameForm(false)}
           updateButton={updateButton}
-          buttons={buttons}
+          buttons={currentPage?.buttons || []}
         />
       )}
 
@@ -230,6 +295,7 @@ export default function Layout() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
