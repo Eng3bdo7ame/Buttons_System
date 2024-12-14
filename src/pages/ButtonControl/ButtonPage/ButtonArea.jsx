@@ -22,6 +22,16 @@ export default function ButtonArea({
   const [draggingButtonId, setDraggingButtonId] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState(null); // تخزين الزر الموقوف عليه
+
+  const handleMouseEnter = (button) => {
+    setHoveredButton(button); // تعيين الزر عند الوقوف عليه
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredButton(null); // إزالة الزر عند المغادرة
+  };
+
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -42,6 +52,10 @@ export default function ButtonArea({
         setPopupVisible(false); // إخفاء popup
       }
     };
+
+    console.log('buttons', buttons.color);
+
+
 
     // إضافة مستشعر النقر
     document.addEventListener('mousedown', handleClickOutside);
@@ -81,30 +95,21 @@ export default function ButtonArea({
     setDraggingButtonId(event.active.id);
   };
 
-  //   console.log(
-  //     'columns',
-  //     buttons.map((button) => button.columns),
-  //   );
 
-  //   const handleButtonClick = (button, event) => {
-  //     const rect = event.target.getBoundingClientRect();
-  //     setSelectedButton(selectedButton?.id === button.id ? null : button);
+  const handleButtonAction = (button) => {
+    if (button.action) {
+      button.action(); // تنفيذ الوظيفة
+    } else {
+      alert('لا توجد وظيفة محددة لهذا الزر!');
+    }
+  };
 
-  //     if (selectedButton?.id === button.id) {
-  //       setPopupVisible(false);
-  //     } else {
-  //       setPopupPosition({
-  //         top: rect.top - 70,
-  //         left: rect.left + rect.width / 2,
-  //       });
-  //       setPopupVisible(true);
-  //     }
-  //  };
 
   const handleButtonClick = (button) => {
-    setSelectedButton(button); // تحديد الزر
-    if (button.action) {
-      button.action(); // تنفيذ الوظيفة المحفوظة
+    if (selectedButton?.id === button.id) {
+      setSelectedButton(null); // إذا كان الزر هو المحدد حاليًا، قم بإلغاء التحديد
+    } else {
+      setSelectedButton(button); // خلاف ذلك، قم بتحديد الزر
     }
   };
 
@@ -135,35 +140,45 @@ export default function ButtonArea({
               className="grid grid-cols-12 gap-4 relative"
             //   ref={containerRef}
             >
-              {buttons.map((button) => {
-                const isDragging = button.id === draggingButtonId;
-                const isSelected = selectedButton?.id === button.id; // التحقق مما إذا كان الزر المحدد هو نفسه الزر الحالي
+              {buttons.map((button) => (
+                <div
+                  key={button.id}
+                  style={{
+                    gridColumn: `span ${button.columns || 3} / span ${button.columns || 3}`,
+                    // backgroundColor: "red" || 'transparent', // اللون الافتراضي
 
-                return (
-                  <div
-                    key={button.id}
-                    style={{
-                      gridColumn: `span ${button.columns || 3} / span ${button.columns || 3
-                        }`,
-                    }}
-                  >
+                  }}
+                  onMouseEnter={() => handleMouseEnter(button)}
+                  onMouseLeave={handleMouseLeave}
+                  className="relative"
+                >
+                  <SortableItem
+                    id={button.id}
+                    button={button}
+                    onClick={() => handleButtonClick(button)}
+                    selectedButton={selectedButton}
+                    buttons={button}
+                  />
+
+                  {/* نافذة البيانات */}
+                  {hoveredButton?.id === button.id && (
+                    <div className="absolute  bottom-full left-1/2 transform -translate-x-1/2  mb-2 dark:bg-gray-800 dark:text-white bg-white text-right w-[200px] p-2 border rounded-md shadow-lg z-10">
+                      <div className='flex justify-end gap-1'>
+                        <p className="text-sm" >{button.name}</p>
+                        <p className='font-bold'> : اسم الزر</p>
+                      </div>
+                      {button.action &&
+                        <p className="text-sm">
+
+                          {button.action.name || "مخصصة"}
+                          <span className='font-bold'> : الوظيفه</span>
+                        </p>}
+                    </div>
+                  )}
+                </div>
+              ))}
 
 
-                    <SortableItem
-                      id={button.id}
-                      button={button}
-                      onClick={() => handleButtonClick(button)}
-                      selectedButton={selectedButton}
-                    />
-
-
-
-
-
-
-                  </div>
-                );
-              })}
             </div>
           </SortableContext>
         </DndContext>

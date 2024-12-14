@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ButtonSidebar from './ButtonSidebar';
 import ButtonNavbar from './ButtonNavbar';
 import ButtonFooter from './ButtonFooter';
 import ButtonArea from './ButtonArea';
 import MeasurementForm from '../Form/MeasurementForm';
 import Rename from '../Form/Rename';
+import ColorForm from '../Form/ColorForm';
 
 export default function Layout() {
   const [showButtonSidebar, setShowButtonSidebar] = useState(true);
   const [showMeasurementForm, setMeasurementForm] = useState(false);
   const [showRenameForm, setShowRenameForm] = useState(false);
   const [selectedButton, setSelectedButton] = useState(null);
+  const [showColorPicker, setShowColorPicker] = useState(false); // لحالة عرض فورم اللون
+  const [color, setColor] = useState('#2563eb'); // القيمة الافتراضية للون
+
+
+  const changeColor = () => {
+    if (!selectedButton) {
+      alert('من فضلك اختر زرًا!');
+      return;
+    }
+    setShowColorPicker(true);
+  };
+
+  const confirmColorChange = () => {
+    console.log('jlllllllllllllll');
+  };
 
   const [pages, setPages] = useState(
     JSON.parse(localStorage.getItem('pages')) || [
@@ -78,12 +94,18 @@ export default function Layout() {
 
   const handleSwitchPage = (pageId) => {
     setCurrentPageId(pageId);
+    handleFooterAction(switchToPage);
     setShowPagePopup(false);
     setSelectedButton(null);
   };
 
-
-
+  const switchToPage = () => {
+    if (!selectedButton) {
+      alert('من فضلك اختر زرًا!');
+      return;
+    }
+    setShowPagePopup(true);
+  };
   const handleMovementButton = () => {
     if (selectedButton) {
       const updatedPages = pages.map((page) =>
@@ -148,16 +170,27 @@ export default function Layout() {
         ? {
           ...page,
           buttons: page.buttons.map((button) =>
-            button.id === id ? { ...button, ...updatedValues } : button,
+            button.id === id
+              ? {
+                ...button,
+                ...updatedValues, // تحديث الخصائص الجديدة بما في ذلك اللون
+                color: updatedValues.color || button.color, // الحفاظ على اللون القديم إذا لم يتم تقديم لون جديد
+              }
+              : button
           ),
         }
-        : page,
+        : page
     );
 
     setPages(updatedPages);
-    localStorage.setItem('pages', JSON.stringify(updatedPages));
-    setSelectedButton({ ...selectedButton, ...updatedValues });
+    localStorage.setItem('pages', JSON.stringify(updatedPages)); // تخزين البيانات المحدثة
+    if (id === selectedButton?.id) {
+      setSelectedButton({ ...selectedButton, ...updatedValues });
+    }
   };
+
+
+
 
   const currentPage = pages.find((page) => page.id === currentPageId);
 
@@ -165,18 +198,35 @@ export default function Layout() {
 
   const handleFooterAction = (footerAction) => {
     if (selectedButton) {
-      updateButton(selectedButton.id, { action: footerAction }); // تحديث الوظيفة
+      const updatedPages = pages.map((page) =>
+        page.id === currentPageId
+          ? {
+            ...page,
+            buttons: page.buttons.map((button) =>
+              button.id === selectedButton.id
+                ? { ...button, action: footerAction } // تعيين الوظيفة
+                : button
+            ),
+          }
+          : page
+      );
+
+      setPages(updatedPages);
+      localStorage.setItem('pages', JSON.stringify(updatedPages)); // حفظ البيانات في localStorage
+
       alert(`تم تعيين الوظيفة للزر "${selectedButton.name}"`);
       setSelectedButton(null); // إلغاء تحديد الزر
-
-    } else {
-      alert('من فضلك اختر زرًا أولاً!');
     }
   };
 
 
 
-
+  useEffect(() => {
+    const storedPages = JSON.parse(localStorage.getItem('pages'));
+    if (storedPages) {
+      setPages(storedPages); // استعادة البيانات
+    }
+  }, []);
 
   return (
     <div className="flex gap-3 h-screen overflow-hidden bg-white dark:bg-gray-900">
@@ -191,6 +241,9 @@ export default function Layout() {
           deleteButton={handleDeleteButton}
           handleMovementButton={handleMovementButton}
           selectedButton={selectedButton}
+          updateButton={updateButton}
+          changeColor={changeColor}
+
         />
 
         <div className="flex py-3">
@@ -209,6 +262,8 @@ export default function Layout() {
               selectedButton={selectedButton}
               setSelectedButton={setSelectedButton}
               AddNewButton={AddNewButton}
+              updateButton={updateButton} // تمرير دالة التحديث
+
               pages={pages}
 
             />
@@ -269,6 +324,8 @@ export default function Layout() {
         />
       )}
 
+
+
       {showPagePopup && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-5 rounded shadow-lg w-65">
@@ -277,7 +334,8 @@ export default function Layout() {
               {pages.map((page) => (
                 <li key={page.id}>
                   <button
-                    onClick={() => handleSwitchPage(page.id)}
+
+                    onClick={() => handleFooterAction(switchToPage)}
                     className="block w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                   >
                     {page.name}

@@ -12,10 +12,15 @@ const ButtonNavbar = ({
   onMeasurementClick,
   handleRenameClick,
   deleteButton,
+  setSelectedButton,
+  updateButton,
   handleMovementButton,
   selectedButton,
+  changeColor
 }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false); // لحالة عرض فورم اللون
+  const [color, setColor] = useState('#2563eb'); // القيمة الافتراضية للون
   const dropdownRef = useRef(null); // Reference to the dropdown
 
   const toggleShowMenu = () => {
@@ -36,6 +41,13 @@ const ButtonNavbar = ({
   }, []);
 
   console.log('selectedButton', selectedButton);
+
+
+
+
+
+
+
 
   const buttons = [
     {
@@ -58,17 +70,23 @@ const ButtonNavbar = ({
     },
     {
       id: 3,
+      name: 'الالوان',
+      icon: <FaPlus />,
+      action: changeColor,
+    },
+    {
+      id: 4,
       name: 'زياده العدد',
       icon: <FaPlus />,
     },
     {
-      id: 4,
+      id: 5,
       name: 'كتابه',
       icon: <FaPenToSquare />,
       action: handleRenameClick,
     },
     {
-      id: 5,
+      id: 6,
       name: 'القياسات',
       icon: <AiOutlineFullscreen />,
       action: onMeasurementClick,
@@ -132,6 +150,10 @@ const ButtonNavbar = ({
           )}
         </div>
       </nav>
+
+
+
+
     </>
   );
 };
