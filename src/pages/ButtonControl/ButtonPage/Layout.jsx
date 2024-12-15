@@ -13,26 +13,23 @@ export default function Layout() {
   const [showRenameForm, setShowRenameForm] = useState(false);
   const [selectedButton, setSelectedButton] = useState(null);
   const [showColorPicker, setShowColorPicker] = useState(false); // لحالة عرض فورم اللون
-  const [color, setColor] = useState('#2563eb'); // القيمة الافتراضية للون
 
 
   const changeColor = () => {
-    if (!selectedButton) {
+    if (selectedButton) {
+      setShowColorPicker(true); // عرض فورم اختيار اللون
+    } else {
       alert('من فضلك اختر زرًا!');
-      return;
     }
-    setShowColorPicker(true);
   };
 
-  const confirmColorChange = () => {
-    console.log('jlllllllllllllll');
-  };
+
 
   const [pages, setPages] = useState(
     JSON.parse(localStorage.getItem('pages')) || [
       { id: 1, name: 'الصفحة الرئيسية', buttons: [] },
     ],
-  ); // الصفحات المخزنة
+  );
 
   const [currentPageId, setCurrentPageId] = useState(pages[0]?.id || null); // الصفحة النشطة
   const [showPagePopup, setShowPagePopup] = useState(false); // حالة عرض الـ popup لاختيار الصفحة
@@ -64,6 +61,8 @@ export default function Layout() {
       isFixed: false,
       isActive: true, // خاصية تفعيل الزر
       targetPage: 'الصفحة الرئيسية', // الصفحة الافتراضية
+      // action: 'الصفحة الرئيسية', // الصفحة الافتراضية
+      color: '#2563eb',
     };
 
     const updatedPages = pages.map((page) =>
@@ -136,6 +135,11 @@ export default function Layout() {
     }
   };
 
+
+
+
+
+
   const deleteButton = (id) => {
     const updatedPages = pages.map((page) =>
       page.id === currentPageId
@@ -173,7 +177,7 @@ export default function Layout() {
             button.id === id
               ? {
                 ...button,
-                ...updatedValues, // تحديث الخصائص الجديدة بما في ذلك اللون
+                ...updatedValues, // التحديث هنا
                 color: updatedValues.color || button.color, // الحفاظ على اللون القديم إذا لم يتم تقديم لون جديد
               }
               : button
@@ -184,10 +188,14 @@ export default function Layout() {
 
     setPages(updatedPages);
     localStorage.setItem('pages', JSON.stringify(updatedPages)); // تخزين البيانات المحدثة
+
     if (id === selectedButton?.id) {
       setSelectedButton({ ...selectedButton, ...updatedValues });
     }
   };
+
+
+
 
 
 
@@ -263,7 +271,6 @@ export default function Layout() {
               setSelectedButton={setSelectedButton}
               AddNewButton={AddNewButton}
               updateButton={updateButton} // تمرير دالة التحديث
-
               pages={pages}
 
             />
@@ -324,6 +331,16 @@ export default function Layout() {
         />
       )}
 
+      {showColorPicker && (
+        <ColorForm
+          selectedButton={selectedButton}
+          setSelectedButton={setSelectedButton}
+          onClose={() => setShowColorPicker(false)}
+          updateButton={updateButton}
+          changeColor={changeColor}
+
+        />
+      )}
 
 
       {showPagePopup && (

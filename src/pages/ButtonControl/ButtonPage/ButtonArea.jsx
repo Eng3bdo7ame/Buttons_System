@@ -24,6 +24,8 @@ export default function ButtonArea({
   const [popupVisible, setPopupVisible] = useState(false);
   const [hoveredButton, setHoveredButton] = useState(null); // تخزين الزر الموقوف عليه
 
+  console.log('buttonsbuttonsbuttons', buttons);
+
   const handleMouseEnter = (button) => {
     setHoveredButton(button); // تعيين الزر عند الوقوف عليه
   };

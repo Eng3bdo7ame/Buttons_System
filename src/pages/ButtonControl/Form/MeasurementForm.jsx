@@ -12,6 +12,9 @@ const MeasurementForm = ({ selectedButton, onClose, updateButton, setSelectedBut
 
     };
 
+    console.log('selectedButtonselectedButtonselectedButton', selectedButton);
+
+
     return (
         <div className="absolute z-50 top-0 left-0 w-full h-full bg-black bg-opacity-90">
             <div className="fixed inset-0 flex justify-center items-center">
