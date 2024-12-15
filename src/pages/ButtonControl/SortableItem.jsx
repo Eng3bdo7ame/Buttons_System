@@ -13,11 +13,12 @@ export default function SortableItem({ id, button, onClick, selectedButton }) {
         transform: button.isFixed ? undefined : CSS.Transform.toString(transform), // لا تضيف التحويل إذا كان مثبتًا
         transition: button.isFixed ? undefined : transition, // لا تضيف الانتقال إذا كان مثبتًا
         height: button.height,
+        // backgroundColor: button.isFixed ? "gray" :  (selectedButton?.id === button.id ? "green" : button.color)
+        backgroundColor: selectedButton?.id === button.id ? "#4ade80" : button.isFixed ? "gray" : button.color
     };
 
 
 
-    console.log('button', button);
 
     return (
         <button
@@ -26,7 +27,7 @@ export default function SortableItem({ id, button, onClick, selectedButton }) {
             {...attributes}
             {...(button.isFixed ? {} : listeners)} // منع الاستماع للأحداث إذا كان الزر مثبتًا
             onClick={onClick}
-            className={`w-full flex items-center justify-center gap-2 text-white py-2 px-4 rounded shadow ${button.isFixed ? "bg-gray-400 text-white hover:bg-gray-400 cursor-not-allowed" : button.color} ${selectedButton?.id === button.id ? "bg-green-300 hover:bg-green-300 text-black font-bold" : ""} hover:bg-blue-600 focus:outline-none`}
+            className={`w-full flex items-center justify-center gap-2 text-white py-2 px-4 rounded shadow ${button.isFixed ? "text-white hover:bg-gray-400 cursor-not-allowed" : button.color} ${selectedButton?.id === button.id ? "bg-green-300 hover:bg-green-300 text-black font-bold" : ""} hover:bg-blue-600 focus:outline-none`}
         >
             {button.isFixed && <BsPinAngleFill /> || selectedButton?.id === button.id && <FcOk />}{button.name || `Button ${button.id}`}
         </button>

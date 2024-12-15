@@ -33,14 +33,14 @@ export default function ColorForm({ setShowColorPicker, updateButton, selectedBu
                             className="text-right text-black dark:text-white dark:bg-gray-800 font-semibold w-full p-1 border rounded"
                             type="text"
                             id="hs-color-input"
-                            value={color}
+                            value={selectedButton.color || '#2563eb'}
                             onChange={(e) => setColor(e.target.value)}
                         />
                         <input
                             type="color"
                             className="p-1 h-10 w-full block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
                             id="hs-color-input"
-                            value={color || '#2563eb'}
+                            value={selectedButton.color || '#2563eb'}
                             onChange={(e) => setColor(e.target.value)}
                         />
                     </div>
