@@ -18,6 +18,7 @@ export default function ButtonArea({
   setSelectedButton,
   pages,
   AddNewButton,
+  addMedia
 }) {
   const [draggingButtonId, setDraggingButtonId] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
@@ -164,17 +165,25 @@ export default function ButtonArea({
 
                   {/* نافذة البيانات */}
                   {hoveredButton?.id === button.id && (
-                    <div className="absolute  bottom-full left-1/2 transform -translate-x-1/2  mb-2 dark:bg-gray-800 dark:text-white bg-white text-right w-[200px] p-2 border rounded-md shadow-lg z-10">
+                    <div className="absolute  bottom-full left-1/2 transform -translate-x-1/2  mb-2 dark:bg-gray-800 dark:text-white bg-white text-right w-[220px] overflow-hidden p-2 border rounded-md shadow-lg z-10">
                       <div className='flex justify-end gap-1'>
                         <p className="text-sm" >{button.name}</p>
                         <p className='font-bold'> : اسم الزر</p>
                       </div>
                       {button.action &&
                         <p className="text-sm">
-
                           {button.action.name || "مخصصة"}
                           <span className='font-bold'> : الوظيفه</span>
                         </p>}
+                      {button.media &&
+                        <div className='flex items-center justify-end gap-1'>
+                          <img
+                            className='w-10 h-10   rounded-full'
+                            src={button.media} alt="" />
+                          <p className='font-bold'> : الصوره</p>
+                        </div>
+                      }
+
                     </div>
                   )}
                 </div>

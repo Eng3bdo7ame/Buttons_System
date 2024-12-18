@@ -231,6 +231,32 @@ export default function Layout() {
 
 
 
+  const addMedia = () => {
+    if (!selectedButton) {
+      alert('من فضلك اختر زرًا!');
+      return;
+    }
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*,video/*';
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          updateButton(selectedButton.id, { media: reader.result });
+          alert(`تم إضافة ${file.name}`);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    fileInput.click();
+
+    setSelectedButton(null);
+  };
+
+
+
   useEffect(() => {
     const storedPages = JSON.parse(localStorage.getItem('pages'));
     if (storedPages) {
@@ -259,6 +285,7 @@ export default function Layout() {
         <div className="flex py-3">
           {currentPage && currentPage.buttons ? (
             <ButtonArea
+              addMedia={addMedia}
               buttons={currentPage.buttons}
               setButtons={(newButtons) => {
                 const updatedPages = pages.map((page) =>
@@ -282,6 +309,7 @@ export default function Layout() {
         </div>
 
         <ButtonFooter
+          addMedia={addMedia}
           toggleButtonSidebar={toggleButtonSidebar}
           showButtonSidebar={showButtonSidebar}
           onMeasurementClick={handleMeasurementClick}

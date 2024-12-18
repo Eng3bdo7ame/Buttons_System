@@ -14,8 +14,7 @@ const ButtonFooter = ({
     pages,
     setShowPagePopup,
     handleFooterAction,
-    handleSwitchPage
-}) => {
+    addMedia }) => {
     const [showMenu, setShowMenu] = useState(false);
 
     const dropdownRef = useRef(null); // Reference to the dropdown
@@ -54,25 +53,7 @@ const ButtonFooter = ({
         setSelectedButton(null);
     };
 
-    const addMedia = () => {
-        if (!selectedButton) {
-            alert('من فضلك اختر زرًا!');
-            return;
-        }
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*,video/*';
-        fileInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                updateButton(selectedButton.id, { media: file.name });
-                alert(`تم إضافة ${file.name}`);
-            }
-        };
-        fileInput.click();
 
-        setSelectedButton(null);
-    };
 
 
 
@@ -108,7 +89,7 @@ const ButtonFooter = ({
             id: 2,
             name: 'اضافه صوره او فيديو',
             icon: <GiMove />,
-            action: () => handleFooterAction(addMedia),
+            action: addMedia,
         },
 
         {
