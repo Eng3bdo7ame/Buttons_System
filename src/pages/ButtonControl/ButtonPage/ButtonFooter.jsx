@@ -146,6 +146,36 @@ const ButtonFooter = ({
                         ))}
                     </ul>
                 </div>
+
+                <div className="relative" ref={dropdownRef}>
+                    <div className="xl:hidden lg:flex items-center justify-end">
+                        <button
+                            onClick={toggleShowMenu}
+                            className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                        >
+                            Dropdown
+                        </button>
+                    </div>
+
+                    {showMenu && (
+                        <div className="xl:hidden lg:flex z-10 absolute left-0 mt-8 bg-white divide-y divide-gray-100 rounded-lg shadow w-64">
+                            <ul className="py-2 text-sm text-gray-700">
+                                {buttons.map((button, index) => (
+                                    <li className="p-2" key={index}>
+                                        <button
+                                            onClick={button.action}
+                                            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded"
+                                        >
+                                            {button.icon} {button.name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+
+
             </nav>
 
 

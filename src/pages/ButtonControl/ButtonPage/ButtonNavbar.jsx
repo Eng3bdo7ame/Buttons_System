@@ -144,7 +144,7 @@ const ButtonNavbar = ({
           {!showButtonSidebar && (
             <button
               onClick={toggleButtonSidebar}
-              className="text-gray-900 dark:text-red-600"
+              className="text-gray-900 dark:text-white"
             >
               <AiOutlineMenu size={25} />
             </button>
