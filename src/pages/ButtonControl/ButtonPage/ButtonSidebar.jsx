@@ -17,7 +17,7 @@ const ButtonSidebar = ({
     <aside
       className={`
           ${showButtonSidebar ? 'block' : 'hidden'} 
-          xl:relative absolute right-0 top-0 z-50 w-55 shadow-lg shadow-gray-500/50 dark:shadow-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white h-screen duration-300 ease-linear transition-width`}
+          xl:relative absolute right-0 z-50 w-55 shadow-lg shadow-gray-500/50 dark:shadow-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white h-screen duration-300 ease-linear transition-width`}
     >
       <div className="flex justify-between p-4 border-b border-gray-300">
         <h1 className="text-lg font-bold">إضافة صفحة جديدة</h1>

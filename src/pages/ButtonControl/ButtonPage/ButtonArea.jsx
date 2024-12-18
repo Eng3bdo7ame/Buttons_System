@@ -55,7 +55,7 @@ export default function ButtonArea({
       }
     };
 
-    console.log('buttons', buttons.color);
+    console.log('buttons', buttons);
 
 
 

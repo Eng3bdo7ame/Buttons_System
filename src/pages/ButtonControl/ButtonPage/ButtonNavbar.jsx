@@ -109,16 +109,7 @@ const ButtonNavbar = ({
             ))}
           </ul>
 
-          <div className="">
-            {!showButtonSidebar && (
-              <button
-                onClick={toggleButtonSidebar}
-                className="text-gray-900 dark:text-white"
-              >
-                <AiOutlineMenu size={25} />
-              </button>
-            )}
-          </div>
+
         </div>
 
         <div className="relative" ref={dropdownRef}>
@@ -146,6 +137,17 @@ const ButtonNavbar = ({
                 ))}
               </ul>
             </div>
+          )}
+        </div>
+
+        <div className="ml-5">
+          {!showButtonSidebar && (
+            <button
+              onClick={toggleButtonSidebar}
+              className="text-gray-900 dark:text-red-600"
+            >
+              <AiOutlineMenu size={25} />
+            </button>
           )}
         </div>
       </nav>
