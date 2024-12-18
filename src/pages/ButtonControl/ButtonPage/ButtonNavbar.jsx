@@ -20,7 +20,6 @@ const ButtonNavbar = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false); // لحالة عرض فورم اللون
-  const [color, setColor] = useState('#2563eb'); // القيمة الافتراضية للون
   const dropdownRef = useRef(null); // Reference to the dropdown
 
   const toggleShowMenu = () => {

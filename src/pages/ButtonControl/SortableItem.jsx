@@ -14,7 +14,7 @@ export default function SortableItem({ id, button, onClick, selectedButton }) {
         transition: button.isFixed ? undefined : transition, // لا تضيف الانتقال إذا كان مثبتًا
         height: button.height,
         // backgroundColor: button.isFixed ? "gray" :  (selectedButton?.id === button.id ? "green" : button.color)
-        backgroundColor: selectedButton?.id === button.id ? "#4ade80" : button.isFixed ? "gray" : button.color
+        backgroundColor: selectedButton?.id === button.id ? "#4ade80" : (button.isFixed ? "gray" : button.color)
     };
 
 

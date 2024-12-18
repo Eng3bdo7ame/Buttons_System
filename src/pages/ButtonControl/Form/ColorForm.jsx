@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function ColorForm({ setShowColorPicker, updateButton, selectedButton, setSelectedButton, onClose }) {
-    const [color, setColor] = useState('#2563eb'); // Default color
+    const [color, setColor] = useState('red'); // Default color
 
 
 

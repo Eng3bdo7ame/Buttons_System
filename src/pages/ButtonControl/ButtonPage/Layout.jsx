@@ -91,6 +91,8 @@ export default function Layout() {
     setCurrentPageId(newPage.id); // الانتقال للصفحة الجديدة
   };
 
+
+
   const handleSwitchPage = (pageId) => {
     setCurrentPageId(pageId);
     handleFooterAction(switchToPage);
